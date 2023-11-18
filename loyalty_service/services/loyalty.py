@@ -42,8 +42,8 @@ class LoyaltyService():
             raise NotFoundException(prefix="Delete Loyalty")
         return await self._loyaltyCRUD.delete(loyalty)
     
-    async def patch(self, loyalty_id: int, loyalty_update: LoyaltyUpdate):
-        loyalty = await self._loyaltyCRUD.get_by_id(loyalty_id)
+    async def patch(self, username: str, loyalty_update: LoyaltyUpdate):
+        loyalty = await self._loyaltyCRUD.get_by_username(username)
 
         if loyalty == None:
             raise NotFoundException(prefix="Update Loyalty")

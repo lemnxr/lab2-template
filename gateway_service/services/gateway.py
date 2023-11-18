@@ -4,7 +4,7 @@ from datetime import datetime
 from cruds.interfaces.reservation import IReservationCRUD
 from cruds.interfaces.payment import IPaymentCRUD
 from cruds.interfaces.loyalty import ILoyaltyCRUD
-from exceptions.exceptions import NotFoundException
+from exceptions.exceptions import NotFoundException, ConflictException
 from enums.status import ReservationStatus, PaymentStatus, LoyaltyStatus
 from schemas.user import UserInfoResponse
 from schemas.reservation import *
@@ -50,34 +50,32 @@ class GatewayService():
     async def __get_hotel_by_id(self, hotel_id: int):
         if hotel_id:
             hotel_dict = await self._reservationCRUD.get_hotel_by_id(hotel_id)
-            print(hotel_dict)
         else:
             hotel_dict = None
         return hotel_dict
     
-    async def __get_payment_by_uid(self, payment_uid: int):
+    async def __get_hotel_by_uid(self, hotel_uid: UUID):
+        if hotel_uid:
+            hotel_dict = await self._reservationCRUD.get_hotel_by_uid(hotel_uid)
+        else:
+            hotel_dict = None
+        return hotel_dict
+    
+    async def __get_payment_by_uid(self, payment_uid: UUID):
         if payment_uid:
             payment_dict = await self._paymentCRUD.get_payment_by_uid(payment_uid)
-            print(payment_dict)
         else:
             payment_dict = None
         return payment_dict
     
     async def _get_user_reservations_hotels(self, user_name: str):
-        reservations_list = await self._reservationCRUD.get_all_reservations(user_name=user_name)
+        reservations_list = await self._reservationCRUD.get_reservations_by_username(user_name=user_name)
        
         reservations = []
 
         for reservation_dict in reservations_list:
             hotel_dict = await self.__get_hotel_by_id(reservation_dict["hotel_id"])
             payment_dict = await self.__get_payment_by_uid(reservation_dict["payment_uid"])
-
-            print(hotel_dict)
-            print(type(hotel_dict))
-            print(hotel_dict["hotel_uid"])
-
-            print(reservation_dict["start_date"])
-            print(type(reservation_dict["start_date"]))
     
             hotel_info = HotelInfo(
                 hotel_uid=hotel_dict["hotel_uid"],
@@ -101,62 +99,30 @@ class GatewayService():
                     payment=payment_info
                 )
             )
-        print(reservations)
         return reservations
-    
-    # async def get_new_loyalty(self, user_name: str):
-    #     loyalty_id = await self._loyaltyCRUD.create_new_loyalty(
-    #         LoyaltyCreate(
-    #             username = user_name,
-    #             status = "BRONZE",
-    #             discount = 0,
-    #             reservation_count = 0
-    #         )
-    #     )
 
-    async def __get_loyalty_by_username(self, user_name):
+    async def __get_loyalty_by_username(self, user_name: str):
         if user_name:
             loyalty_dict = await self._loyaltyCRUD.get_loyalty_by_username(user_name)
-            print(loyalty_dict)
         else:
             loyalty_dict = None
-            print(loyalty_dict)
-            print("NONONONO")
         return loyalty_dict
     
     async def _get_user_loyalty(self, user_name: str):
         loyalty_dict = await self.__get_loyalty_by_username(user_name)
 
-        if loyalty_dict == []:
-            loyalty_dict.append(await self._loyaltyCRUD.get_new_loyalty(
+        if loyalty_dict == None:
+            loyalty_dict = dict((await self._loyaltyCRUD.get_new_loyalty(
                 CreateLoyaltyRequest(
                     username=user_name,
-                    status="BRONZE",
-                    discount=0,
+                    status=LoyaltyStatus.Bronze.value,
+                    discount=5,
                     reservation_count=0
+                    )
                 )
             )
         )
-        #else:
-        #    loyalty_dict = loyalty_dict[0]
-        print(loyalty_dict)
-        loyalty = LoyaltyInfoResponse(
-                        status=loyalty_dict[0]["status"],
-                        discount=loyalty_dict[0]["discount"],
-                        reservation_count=loyalty_dict[0]["reservation_count"]
-                        )
-        
-        return loyalty
-        
-        # loyalty_list = await self._loyaltyCRUD.get_all_loyalty(user_name = user_name)
-
-        # if len(loyalty_list):
-        #     loyalty_dict = loyalty_list[0]
-        # else:
-        #     loyalty_dict = await self.get_new_loyalty(user_name)
-
-        # return loyalty_dict
-         
+        return loyalty_dict
     
     async def get_user_info(self, user_name: str):
         reservations = await self._get_user_reservations_hotels(user_name)
@@ -170,4 +136,107 @@ class GatewayService():
     async def get_user_reservations(self, user_name: str):
         reservations = await self._get_user_reservations_hotels(user_name)
         return reservations
+    
+    async def reserve_hotel(self, user_name: str, hotel_reservation_request: CreateReservationRequest):
+        hotel = await self.__get_hotel_by_uid(hotel_reservation_request.hotel_uid)
+
+        if hotel == None:
+            raise NotFoundException(prefix="Get Hotel")
+        
+        days = (hotel_reservation_request.end_date - hotel_reservation_request.start_date).days
+
+        if days < 1:
+            raise ConflictException(prefix="Reserve Hotel")
+        
+        new_reservation_uid = await self._reservationCRUD.get_new_reservation(
+            username = user_name,
+            hotel_id = hotel["id"],
+            status = PaymentStatus.Paid.value,
+            start_date = hotel_reservation_request.start_date,
+            end_date = hotel_reservation_request.end_date
+        )
+
+        new_reservation = await self._reservationCRUD.get_reservation_by_uid(new_reservation_uid)
+
+        full_price = int(hotel["price"]) * days
+
+        loyalty = await self._get_user_loyalty(user_name)
+
+        full_price = full_price * ((100 - int(loyalty["discount"])) / 100)
+
+        new_payment = await self._paymentCRUD.get_new_payment(new_reservation["payment_uid"], full_price)
+        new_loyalty = await self._loyaltyCRUD.increase_loyalty(loyalty["username"], loyalty["reservation_count"])
+
+        return CreateReservationResponse(
+                        reservation_uid=new_reservation_uid, 
+                        hotel_uid=hotel["hotel_uid"],
+                        start_date=hotel_reservation_request.start_date,
+                        end_date=hotel_reservation_request.end_date,
+                        discount=new_loyalty["discount"],
+                        status=ReservationStatus.Paid.value,
+                        payment=PaymentInfo(
+                            status=new_payment["status"],
+                            price=new_payment["price"])
+                )
+
+    async def get_reservation_info(self, user_name: str, reservation_uid: UUID):
+        reservation = await self._reservationCRUD.get_reservation_by_uid(reservation_uid)
+
+        if reservation == None:
+            raise NotFoundException(prefix="Not Found")
+
+        if reservation["username"] != user_name:
+            raise NotFoundException(prefix="Incorrect username")
+    
+        hotel = await self.__get_hotel_by_id(reservation["hotel_id"])
+        payment = await self.__get_payment_by_uid(reservation["payment_uid"])
+
+        hotel_info = HotelInfo(
+            hotel_uid=hotel["hotel_uid"],
+            name=hotel["name"],
+            fullAddress=hotel["country"]+", "+hotel["city"]+", "+hotel["address"],
+            stars=hotel["stars"]
+        )
+            
+        payment_info = PaymentInfo(
+                status=payment["status"],
+                price=payment["price"]
+        )
+
+        reservation_response = ReservationResponse(
+                    reservation_uid=reservation["reservation_uid"],
+                    hotel=hotel_info,
+                    start_date=reservation["start_date"],
+                    end_date=reservation["end_date"],
+                    status=reservation["status"],
+                    payment=payment_info
+                )
+        return reservation_response
+    
+    async def reservation_cancel(self, user_name: str, reservation_uid: UUID):
+        reservation = await self._reservationCRUD.get_reservation_by_uid(reservation_uid)
+
+        if reservation == None:
+            raise NotFoundException(prefix="Not Found")
+
+        if reservation["username"] != user_name:
+            raise NotFoundException(prefix="Incorrect username")
+        
+        await self._reservationCRUD.reservation_cancel(reservation_uid)
+        await self._paymentCRUD.payment_cancel(reservation["payment_uid"])
+
+        loyalty = await self._get_user_loyalty(user_name)
+        await self._loyaltyCRUD.decrease_loyalty(loyalty["username"], loyalty["reservation_count"])
+
+        return reservation
+    
+    async def get_loyalty(self, user_name: str):
+        loyalty = await self._get_user_loyalty(user_name)
+
+        loyalty_info = LoyaltyInfoResponse(
+            status=loyalty["status"],
+            discount=loyalty["discount"],
+            reservation_count=loyalty["reservation_count"]
+        )
+        return loyalty_info
     

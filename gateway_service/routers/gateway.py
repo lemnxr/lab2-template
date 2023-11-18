@@ -96,94 +96,94 @@ async def get_user_reservations(
     ).get_user_reservations(user_name = X_User_Name)
 
 
-# @router.post(
-#     "reservations",
-#     status_code=status.HTTP_200_OK,
-#     response_model=CreateReservationResponse,
-#     responses={
-#         status.HTTP_200_OK: ResponseClassGateway.ReserveHotel.value,
-#         status.HTTP_404_NOT_FOUND: ResponseClassGateway.HotelNotFound.value,
-#     }
-# )
-# async def reserve_hotel(
-#     reservationCRUD: Annotated[IReservationCRUD, Depends(get_reservation_crud)],
-#     paymentCRUD: Annotated[IPaymentCRUD, Depends(get_payment_crud)],
-#     loyaltyCRUD: Annotated[ILoyaltyCRUD, Depends(get_loyalty_crud)],
-#     X_User_Name: Annotated[str, Header(max_length=80)],
-#     hotel_reservation_request: CreateReservationRequest
-# ):
-#     return await GatewayService(
-#         reservationCRUD=reservationCRUD,
-#         paymentCRUD=paymentCRUD,
-#         loyaltyCRUD=loyaltyCRUD
-#     ).reserve_hotel(user_name = X_User_Name, hotel_reservation_request = hotel_reservation_request)
+@router.post(
+    "reservations",
+    status_code=status.HTTP_200_OK,
+    response_model=CreateReservationResponse,
+    responses={
+        status.HTTP_200_OK: ResponseClassGateway.ReserveHotel.value,
+        status.HTTP_404_NOT_FOUND: ResponseClassGateway.HotelNotFound.value,
+    }
+)
+async def reserve_hotel(
+    reservationCRUD: Annotated[IReservationCRUD, Depends(get_reservation_crud)],
+    paymentCRUD: Annotated[IPaymentCRUD, Depends(get_payment_crud)],
+    loyaltyCRUD: Annotated[ILoyaltyCRUD, Depends(get_loyalty_crud)],
+    X_User_Name: Annotated[str, Header(max_length=80)],
+    hotel_reservation_request: CreateReservationRequest
+):
+    return await GatewayService(
+        reservationCRUD=reservationCRUD,
+        paymentCRUD=paymentCRUD,
+        loyaltyCRUD=loyaltyCRUD
+    ).reserve_hotel(user_name = X_User_Name, hotel_reservation_request = hotel_reservation_request)
 
 
-# @router.get(
-#     "/reservations/{reservation_uid}",
-#     status_code=status.HTTP_200_OK,
-#     response_model=ReservationResponse,
-#     responses={
-#         status.HTTP_200_OK: ResponseClassGateway.GetReservationInfo.value,
-#         status.HTTP_404_NOT_FOUND: ResponseClassGateway.ReservationNotFound.value,
-#     }
-# )
-# async def get_reservation_info(
-#     reservationCRUD: Annotated[IReservationCRUD, Depends(get_reservation_crud)],
-#     paymentCRUD: Annotated[IPaymentCRUD, Depends(get_payment_crud)],
-#     loyaltyCRUD: Annotated[ILoyaltyCRUD, Depends(get_loyalty_crud)],
-#     reservation_uid: UUID,
-#     X_User_Name: Annotated[str, Header(max_length=80)]
-# ):
-#     return await GatewayService(
-#         reservationCRUD=reservationCRUD,
-#         paymentCRUD=paymentCRUD,
-#         loyaltyCRUD=loyaltyCRUD
-#     ).get_reservation_info(user_name=X_User_Name, reservation_uid=reservation_uid)
+@router.get(
+    "/reservations/{reservation_uid}",
+    status_code=status.HTTP_200_OK,
+    response_model=ReservationResponse,
+    responses={
+        status.HTTP_200_OK: ResponseClassGateway.GetReservationInfo.value,
+        status.HTTP_404_NOT_FOUND: ResponseClassGateway.ReservationNotFound.value,
+    }
+)
+async def get_reservation_info(
+    reservationCRUD: Annotated[IReservationCRUD, Depends(get_reservation_crud)],
+    paymentCRUD: Annotated[IPaymentCRUD, Depends(get_payment_crud)],
+    loyaltyCRUD: Annotated[ILoyaltyCRUD, Depends(get_loyalty_crud)],
+    reservation_uid: UUID,
+    X_User_Name: Annotated[str, Header(max_length=80)]
+):
+    return await GatewayService(
+        reservationCRUD=reservationCRUD,
+        paymentCRUD=paymentCRUD,
+        loyaltyCRUD=loyaltyCRUD
+    ).get_reservation_info(user_name=X_User_Name, reservation_uid=reservation_uid)
 
 
-# @router.delete(
-#     "/reservations/{reservation_uid}",
-#     status_code=Response, 
-#     responses={
-#         status.HTTP_204_NO_CONTENT: ResponseClassGateway.ReservationCancel.value,
-#         status.HTTP_404_NOT_FOUND: ResponseClassGateway.ReservationNotFound.value,
-#     }
-# )
-# async def reservation_cancel(
-#     reservationCRUD: Annotated[IReservationCRUD, Depends(get_reservation_crud)],
-#     paymentCRUD: Annotated[IPaymentCRUD, Depends(get_payment_crud)],
-#     loyaltyCRUD: Annotated[ILoyaltyCRUD, Depends(get_loyalty_crud)],
-#     reservation_uid: UUID,
-#     X_User_Name: Annotated[str, Header(max_length=80)]
-# ):
-#     await GatewayService(
-#         reservationCRUD=reservationCRUD,
-#         paymentCRUD=paymentCRUD,
-#         loyaltyCRUD=loyaltyCRUD
-#     ).reservation_cancel(user_name = X_User_Name, reservation_uid=reservation_uid)
+@router.delete(
+    "/reservations/{reservation_uid}",
+    response_class=Response, 
+    responses={
+        status.HTTP_204_NO_CONTENT: ResponseClassGateway.ReservationCancel.value,
+        status.HTTP_404_NOT_FOUND: ResponseClassGateway.ReservationNotFound.value,
+    }
+)
+async def reservation_cancel(
+    reservationCRUD: Annotated[IReservationCRUD, Depends(get_reservation_crud)],
+    paymentCRUD: Annotated[IPaymentCRUD, Depends(get_payment_crud)],
+    loyaltyCRUD: Annotated[ILoyaltyCRUD, Depends(get_loyalty_crud)],
+    reservation_uid: UUID,
+    X_User_Name: Annotated[str, Header(max_length=80)]
+):
+    await GatewayService(
+        reservationCRUD=reservationCRUD,
+        paymentCRUD=paymentCRUD,
+        loyaltyCRUD=loyaltyCRUD
+    ).reservation_cancel(user_name = X_User_Name, reservation_uid=reservation_uid)
 
-#     return Response(
-#         status_code=status.HTTP_204_NO_CONTENT
-#     )
+    return Response(
+        status_code=status.HTTP_204_NO_CONTENT
+    )
 
 
-# @router.get(
-#     "/loyalty",
-#     status_code=status.HTTP_200_OK,
-#     response_model=LoyaltyInfoResponse,
-#     responses={
-#         status.HTTP_200_OK: ResponseClassGateway.GetLoyalty.value,
-#     }
-# )
-# async def get_loyalty(
-#     reservationCRUD: Annotated[IReservationCRUD, Depends(get_reservation_crud)],
-#     paymentCRUD: Annotated[IPaymentCRUD, Depends(get_payment_crud)],
-#     loyaltyCRUD: Annotated[ILoyaltyCRUD, Depends(get_loyalty_crud)],
-#     X_User_Name: Annotated[str, Header(max_length=80)]
-# ):
-#     return await GatewayService(
-#         reservationCRUD=reservationCRUD,
-#         paymentCRUD=paymentCRUD,
-#         loyaltyCRUD=loyaltyCRUD
-#     ).get_loyalty(user_name = X_User_Name)
+@router.get(
+    "/loyalty",
+    status_code=status.HTTP_200_OK,
+    response_model=LoyaltyInfoResponse,
+    responses={
+        status.HTTP_200_OK: ResponseClassGateway.GetLoyalty.value,
+    }
+)
+async def get_loyalty(
+    reservationCRUD: Annotated[IReservationCRUD, Depends(get_reservation_crud)],
+    paymentCRUD: Annotated[IPaymentCRUD, Depends(get_payment_crud)],
+    loyaltyCRUD: Annotated[ILoyaltyCRUD, Depends(get_loyalty_crud)],
+    X_User_Name: Annotated[str, Header(max_length=80)]
+):
+    return await GatewayService(
+        reservationCRUD=reservationCRUD,
+        paymentCRUD=paymentCRUD,
+        loyaltyCRUD=loyaltyCRUD
+    ).get_loyalty(user_name = X_User_Name)

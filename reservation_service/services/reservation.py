@@ -13,6 +13,9 @@ class ReservationService():
         
     async def get_all(self, page: int = 1, size: int = 100):
         return await self._reservationCRUD.get_all(offset=(page-1)*size, limit=size)
+    
+    async def get_reservations_by_username(self, user_name: str):
+        return await self._reservationCRUD.get_reservations_by_username(user_name)
 
     async def get_by_uid(self, reservation_uid: UUID):
         reservation = await self._reservationCRUD.get_by_uid(reservation_uid)

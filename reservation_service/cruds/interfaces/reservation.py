@@ -13,6 +13,10 @@ class IReservationCRUD(ABC):
     @abstractmethod
     async def get_all(self, offset: int = 0, limit: int = 100) -> list[ReservationModel]:
        pass
+
+    @abstractmethod
+    async def get_reservations_by_username(self, user_name: str) -> list[ReservationModel]:
+       pass
     
     @abstractmethod
     async def get_by_uid(self, reservation_uid: UUID) -> ReservationModel | None:

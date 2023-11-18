@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from uuid import UUID
 
 
 class IPaymentCRUD(ABC):
@@ -15,3 +16,17 @@ class IPaymentCRUD(ABC):
         self,
     ) ->list[dict]:
         pass
+
+    @abstractmethod
+    async def get_new_payment(
+        self,
+    ) ->list[dict]:
+        pass
+
+    @abstractmethod
+    async def payment_cancel(
+        self,
+        payment_uid: UUID
+    ) ->list[dict]:
+        pass
+  

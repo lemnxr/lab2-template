@@ -8,6 +8,9 @@ from cruds.interfaces.reservation import IReservationCRUD
 class ReservationCRUD(IReservationCRUD):
     async def get_all(self, offset: int = 0, limit: int = 100):
         return self._db.query(ReservationModel).offset(offset).limit(limit).all()
+    
+    async def get_reservations_by_username(self, user_name):
+        return self._db.query(ReservationModel).filter(ReservationModel.username == user_name).all()
 
     async def get_by_uid(self, reservation_uid: UUID):
         return self._db.query(ReservationModel).filter(ReservationModel.reservation_uid == reservation_uid).first()

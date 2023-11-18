@@ -46,7 +46,7 @@ async def get_by_id(loyaltyCRUD: Annotated[ILoyaltyCRUD, Depends(get_loyalty_cru
                     db: session = Depends(loyalty_database.get_db)):
     return await LoyaltyService(loyaltyCRUD=loyaltyCRUD, db=db).get_by_id(id)
 
-@router.get("/?username={user_name}", status_code=status.HTTP_200_OK,
+@router.get("/username/{user_name}", status_code=status.HTTP_200_OK,
             response_model=Loyalty,
             responses={
                 status.HTTP_200_OK: ResponseClassLoyalty.GetByUsername.value,
@@ -85,7 +85,7 @@ async def delete(loyaltyCRUD: Annotated[ILoyaltyCRUD, Depends(get_loyalty_crud)]
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
-@router.patch("/{loyalty_id}", status_code=status.HTTP_200_OK,
+@router.patch("/{username}", status_code=status.HTTP_200_OK,
               response_model=Loyalty,
               responses={
                   status.HTTP_200_OK: ResponseClassLoyalty.Patch.value,
@@ -93,7 +93,7 @@ async def delete(loyaltyCRUD: Annotated[ILoyaltyCRUD, Depends(get_loyalty_crud)]
                   status.HTTP_409_CONFLICT: ResponseClassLoyalty.Conflict.value
               })
 async def patch(loyaltyCRUD: Annotated[ILoyaltyCRUD, Depends(get_loyalty_crud)],
-                id: int,
+                username: str,
                 loyalty_update: LoyaltyUpdate,
                 db: session = Depends(loyalty_database.get_db)):
-    return await LoyaltyService(loyaltyCRUD=loyaltyCRUD,db=db).patch(id, loyalty_update)
+    return await LoyaltyService(loyaltyCRUD=loyaltyCRUD,db=db).patch(username, loyalty_update)

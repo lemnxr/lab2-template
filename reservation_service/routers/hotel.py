@@ -48,7 +48,7 @@ async def get_by_id(hotelCRUD: Annotated[IHotelCRUD, Depends(get_hotel_crud)],
     return await HotelService(hotelCRUD=hotelCRUD, db=db).get_by_id(id)
 
 
-@router.get("/{hotel_uid}", status_code=status.HTTP_200_OK,
+@router.get("/uid/{hotel_uid}", status_code=status.HTTP_200_OK,
             response_model=Hotel,
             responses={
                 status.HTTP_200_OK: ResponseClassHotel.GetByID.value,

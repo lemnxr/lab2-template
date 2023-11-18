@@ -35,6 +35,16 @@ async def get_all(reservationCRUD: Annotated[IReservationCRUD, Depends(get_reser
                     size: Annotated[int, Query(ge=1)] = 100):
     return await ReservationService(reservationCRUD=reservationCRUD, db=db).get_all(page=page, size=size)
 
+@router.get("/username/{user_name}", status_code=status.HTTP_200_OK,
+            response_model=list[Reservation],
+            responses={
+                status.HTTP_200_OK: ResponseClassReservation.GetAll.value
+            })
+async def get_reservations_by_username(reservationCRUD: Annotated[IReservationCRUD, Depends(get_reservation_crud)],
+                                      user_name: str,
+                                      db: session = Depends(reservation_database.get_db),
+    ):
+    return await ReservationService(reservationCRUD=reservationCRUD, db=db).get_reservations_by_username(user_name)
 
 @router.get("/{reservation_uid}", status_code=status.HTTP_200_OK,
             response_model=Reservation,
