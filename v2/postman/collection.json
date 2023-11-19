@@ -283,7 +283,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"hotel_uid\": \"{{hotel_uid}}\",\n    \"start_date\": \"2021-10-08T19:30:30.455Z\",\n    \"end_date\": \"2021-10-11T19:30:30.455Z\"\n}",
+									"raw": "{\n    \"hotel_uid\": \"{{hotel_uid}}\",\n    \"start_date\": \"2021-10-08\",\n    \"end_date\": \"2021-10-11\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
