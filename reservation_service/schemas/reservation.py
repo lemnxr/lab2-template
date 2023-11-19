@@ -15,16 +15,28 @@ class ReservationBase(BaseModel):
     start_date: dt
     end_date: dt
 
+    class Config:
+        json_encoders = {dt: convert_datetime}
+
 class ReservationRequest(ReservationBase):
     hotel_id: int | None = None
+
+    class Config:
+        json_encoders = {dt: convert_datetime}
 
 class Reservation(ReservationBase):
     id: int
     reservation_uid: UUID
     payment_uid: UUID
 
+    class Config:
+        json_encoders = {dt: convert_datetime}
+
 class ReservationUpdate(BaseModel):
     status: ReservationStatus | None = None
     start_date: dt | None = None
     end_date: dt | None = None
+
+    class Config:
+        json_encoders = {dt: convert_datetime}
     
