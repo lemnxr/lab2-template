@@ -97,7 +97,7 @@ async def get_user_reservations(
 
 
 @router.post(
-    "reservations",
+    "/reservations",
     status_code=status.HTTP_200_OK,
     response_model=CreateReservationResponse,
     responses={
