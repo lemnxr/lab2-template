@@ -60,8 +60,8 @@ async def test_add_reservation_success():
                 username = "user",
                 hotel_id = 1,
                 status = "PAID",
-                start_date = "2023-11-19T15:26:52.057Z",
-                end_date = "2023-11-22T15:26:52.057Z",
+                start_date = "2023-11-19",
+                end_date = "2023-11-22",
                 reservation_uid = "901dc631-ea2f-4ae6-8840-b66058cfd37d",
                 id = 4,
                 payment_uid = "6af4762c-763c-4038-81a2-a2d95263ddc0"
@@ -79,8 +79,8 @@ async def test_add_reservation_conflict():
                 username = "user_not_found",
                 hotel_id = 25,
                 status = "PAID",
-                start_date = "2023-11-19T15:26:52.057Z",
-                end_date = "2023-11-22T15:26:52.057Z",
+                start_date = "2023-11-19",
+                end_date = "2023-11-22",
                 reservation_uid = "901dc631-ea2f-4ae6-8840-b66058cfd37d",
                 payment_uid = "6af4762c-763c-4038-81a2-a2d95263ddc0"
             ),
