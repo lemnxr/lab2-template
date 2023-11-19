@@ -28,9 +28,6 @@ class HotelInfo(BaseModel):
     stars: conint(ge=1) | None = None
 
 class ReservationResponse(BaseModel):
-    # class Config:
-    #     json_encoders = {dt: convert_datetime}
-
     reservation_uid: UUID
     hotel: HotelInfo
     start_date: date
@@ -38,47 +35,49 @@ class ReservationResponse(BaseModel):
     status: ReservationStatus
     payment: PaymentInfo
 
-    @validator("start_date", pre=True)
-    def parse_start_date(cls, value):
-        return datetime.strptime(
-            value,
-            "%Y-%m-%d"
-        ).date()
-
-    @validator("end_date", pre=True)
-    def parse_end_date(cls, value):
-        return datetime.strptime(
-            value,
-            "%Y-%m-%d"
-        ).date()
+    @validator('start_date', pre=True)
+    def parse_start_date(cls, v):
+        if isinstance(v, str):
+            return datetime.strptime(
+                v,
+                '%Y-%m-%d'
+            )
+        return v
+    
+    @validator('end_date', pre=True)
+    def parse_end_date(cls, v):
+        if isinstance(v, str):
+            return datetime.strptime(
+                v,
+                '%Y-%m-%d'
+            )
+        return v
 
 
 class CreateReservationRequest(BaseModel):
-    # class Config:
-    #     json_encoders = {dt: convert_datetime}
-
     hotel_uid: UUID
     start_date: date
     end_date: date
 
-    @validator("start_date", pre=True)
-    def parse_start_date(cls, value):
-        return datetime.strptime(
-            value,
-            "%Y-%m-%d"
-        ).date()
-
-    @validator("end_date", pre=True)
-    def parse_end_date(cls, value):
-        return datetime.strptime(
-            value,
-            "%Y-%m-%d"
-        ).date()
+    @validator('start_date', pre=True)
+    def parse_start_date(cls, v):
+        if isinstance(v, str):
+            return datetime.strptime(
+                v,
+                '%Y-%m-%d'
+            )
+        return v
+    
+    @validator('end_date', pre=True)
+    def parse_end_date(cls, v):
+        if isinstance(v, str):
+            return datetime.strptime(
+                v,
+                '%Y-%m-%d'
+            )
+        return v
 
 class CreateReservationResponse(BaseModel):
-    # class Config:
-    #     json_encoders = {dt: convert_datetime}
-
     reservation_uid: UUID
     hotel_uid: UUID
     start_date: date
@@ -87,16 +86,20 @@ class CreateReservationResponse(BaseModel):
     status: ReservationStatus
     payment: PaymentInfo
 
-    @validator("start_date", pre=True)
-    def parse_start_date(cls, value):
-        return datetime.strptime(
-            value,
-            "%Y-%m-%d"
-        ).date()
-
-    @validator("end_date", pre=True)
-    def parse_end_date(cls, value):
-        return datetime.strptime(
-            value,
-            "%Y-%m-%d"
-        ).date()
+    @validator('start_date', pre=True)
+    def parse_start_date(cls, v):
+        if isinstance(v, str):
+            return datetime.strptime(
+                v,
+                '%Y-%m-%d'
+            )
+        return v
+    
+    @validator('end_date', pre=True)
+    def parse_end_date(cls, v):
+        if isinstance(v, str):
+            return datetime.strptime(
+                v,
+                '%Y-%m-%d'
+            )
+        return v
