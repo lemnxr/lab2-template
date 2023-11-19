@@ -20,7 +20,7 @@
 									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
 									"",
 									"    const pageSize = Number(pm.request.url.query.get(\"size\"))",
-									"    const hotelUid = pm.collectionVariables.get(\"hotelUid\")",
+									"    const hotel_uid = pm.collectionVariables.get(\"hotel_uid\")",
 									"    ",
 									"    const response = pm.response.json();    ",
 									"    pm.expect(response.items).to.be.an(\"array\")",
@@ -28,9 +28,9 @@
 									"    pm.expect(response.pageSize).to.be.lte(pageSize)",
 									"    pm.expect(response.totalElements).to.be.not.undefined",
 									"",
-									"    const hotel = _.find(response.items, { \"hotelUid\": hotelUid })",
+									"    const hotel = _.find(response.items, { \"hotel_uid\": hotel_uid })",
 									"    pm.expect(hotel).to.be.not.undefined",
-									"    pm.expect(hotel.hotelUid).to.eq(hotelUid)",
+									"    pm.expect(hotel.hotel_uid).to.eq(hotel_uid)",
 									"    pm.expect(hotel.name).to.eq(\"Ararat Park Hyatt Moscow\")",
 									"    pm.expect(hotel.country).to.eq(\"Россия\")",
 									"    pm.expect(hotel.city).to.eq(\"Москва\")",
@@ -107,7 +107,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"page\": 1,\n    \"pageSize\": 1,\n    \"totalElements\": 1,\n    \"items\": [\n        {\n            \"hotelUid\": \"049161bb-badd-4fa8-9d90-87c9a82b0668\",\n            \"name\": \"Ararat Park Hyatt Moscow\",\n            \"country\": \"Россия\",\n            \"city\": \"Москва\",\n            \"address\": \"Неглинная ул., 4\",\n            \"stars\": 5,\n            \"price\": 10000\n        }\n    ]\n}"
+							"body": "{\n    \"page\": 1,\n    \"pageSize\": 1,\n    \"totalElements\": 1,\n    \"items\": [\n        {\n            \"hotel_uid\": \"049161bb-badd-4fa8-9d90-87c9a82b0668\",\n            \"name\": \"Ararat Park Hyatt Moscow\",\n            \"country\": \"Россия\",\n            \"city\": \"Москва\",\n            \"address\": \"Неглинная ул., 4\",\n            \"stars\": 5,\n            \"price\": 10000\n        }\n    ]\n}"
 						}
 					]
 				},
@@ -126,8 +126,8 @@
 									"    pm.expect(response.status).to.not.empty",
 									"    pm.expect(response.discount).to.be.not.undefined",
 									"    pm.collectionVariables.set(\"discount\", response.discount)",
-									"    pm.expect(response.reservationCount).to.be.not.undefined",
-									"    pm.collectionVariables.set(\"reservationCount\", response.reservationCount)",
+									"    pm.expect(response.reservation_count).to.be.not.undefined",
+									"    pm.collectionVariables.set(\"reservation_count\", response.reservation_count)",
 									"})"
 								],
 								"type": "text/javascript"
@@ -189,7 +189,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status\": \"GOLD\",\n    \"discount\": 10,\n    \"reservationCount\": 25\n}"
+							"body": "{\n    \"status\": \"GOLD\",\n    \"discount\": 10,\n    \"reservation_count\": 25\n}"
 						}
 					]
 				},
@@ -206,28 +206,28 @@
 									"    pm.response.to.have.status(200)",
 									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
 									"",
-									"    const hotelUid = pm.collectionVariables.get(\"hotelUid\")",
+									"    const hotel_uid = pm.collectionVariables.get(\"hotel_uid\")",
 									"    const hotelPrice = pm.collectionVariables.get(\"hotelPrice\")",
 									"    const discount = pm.collectionVariables.get(\"discount\")",
 									"",
 									"    const response = pm.response.json();",
 									"    const request = JSON.parse(pm.request.body.raw)",
 									"",
-									"    pm.expect(response.reservationUid).to.be.not.undefined",
-									"    pm.expect(response.hotelUid).to.be.eq(hotelUid)",
-									"    pm.expect(response.startDate).to.be.eq(request.startDate)",
-									"    pm.expect(response.endDate).to.be.eq(request.endDate)",
+									"    pm.expect(response.reservation_uid).to.be.not.undefined",
+									"    pm.expect(response.hotel_uid).to.be.eq(hotel_uid)",
+									"    pm.expect(response.start_date).to.be.eq(request.start_date)",
+									"    pm.expect(response.end_date).to.be.eq(request.end_date)",
 									"    pm.expect(response.discount).to.be.eq(discount)",
 									"    pm.expect(response.status).to.be.eq(\"PAID\")",
 									"    pm.expect(response.payment).to.be.not.undefined",
 									"    pm.expect(response.payment.status).to.be.eq(\"PAID\")",
-									"    const days = Math.abs(moment(request.startDate).diff(moment(request.endDate), \"days\"))",
+									"    const days = Math.abs(moment(request.start_date).diff(moment(request.end_date), \"days\"))",
 									"    const price = hotelPrice * days",
 									"    pm.expect(response.payment.price).to.be.eq(price - (price * discount / 100.0))",
 									"",
-									"    pm.collectionVariables.set(\"startDate\", request.startDate)",
-									"    pm.collectionVariables.set(\"endDate\", request.endDate)",
-									"    pm.collectionVariables.set(\"reservationUid\", response.reservationUid)",
+									"    pm.collectionVariables.set(\"start_date\", request.start_date)",
+									"    pm.collectionVariables.set(\"end_date\", request.end_date)",
+									"    pm.collectionVariables.set(\"reservation_uid\", response.reservation_uid)",
 									"})"
 								],
 								"type": "text/javascript"
@@ -249,7 +249,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"hotelUid\": \"{{hotelUid}}\",\n    \"startDate\": \"2021-10-08\",\n    \"endDate\": \"2021-10-11\"\n}"
+							"raw": "{\n    \"hotel_uid\": \"{{hotel_uid}}\",\n    \"start_date\": \"2021-10-08\",\n    \"end_date\": \"2021-10-11\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/v1/reservations",
@@ -283,7 +283,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"hotelUid\": \"{{hotelUid}}\",\n    \"startDate\": \"2021-10-08\",\n    \"endDate\": \"2021-10-11\"\n}",
+									"raw": "{\n    \"hotel_uid\": \"{{hotel_uid}}\",\n    \"start_date\": \"2021-10-08\",\n    \"end_date\": \"2021-10-11\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -312,7 +312,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"reservationUid\": \"9b4ba1f7-e5ac-465b-ace4-7b54dec20f9a\",\n    \"hotelUid\": \"049161bb-badd-4fa8-9d90-87c9a82b0668\",\n    \"startDate\": \"2021-10-08\",\n    \"endDate\": \"2021-10-11\",\n    \"discount\": 10,\n    \"status\": \"PAID\",\n    \"payment\": {\n        \"status\": \"PAID\",\n        \"price\": 27000\n    }\n}"
+							"body": "{\n    \"reservation_uid\": \"9b4ba1f7-e5ac-465b-ace4-7b54dec20f9a\",\n    \"hotel_uid\": \"049161bb-badd-4fa8-9d90-87c9a82b0668\",\n    \"start_date\": \"2021-10-08\",\n    \"end_date\": \"2021-10-11\",\n    \"discount\": 10,\n    \"status\": \"PAID\",\n    \"payment\": {\n        \"status\": \"PAID\",\n        \"price\": 27000\n    }\n}"
 						}
 					]
 				},
@@ -329,27 +329,27 @@
 									"    pm.response.to.have.status(200)",
 									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
 									"",
-									"    const hotelUid = pm.collectionVariables.get(\"hotelUid\")",
-									"    const reservationUid = pm.collectionVariables.get(\"reservationUid\")",
+									"    const hotel_uid = pm.collectionVariables.get(\"hotel_uid\")",
+									"    const reservation_uid = pm.collectionVariables.get(\"reservation_uid\")",
 									"    const hotelPrice = pm.collectionVariables.get(\"hotelPrice\")",
-									"    const startDate = pm.collectionVariables.get(\"startDate\")",
-									"    const endDate = pm.collectionVariables.get(\"endDate\")",
+									"    const start_date = pm.collectionVariables.get(\"start_date\")",
+									"    const end_date = pm.collectionVariables.get(\"end_date\")",
 									"    const discount = pm.collectionVariables.get(\"discount\")",
 									"",
 									"    const response = pm.response.json();",
-									"    pm.expect(response.reservationUid).to.be.eq(reservationUid)",
+									"    pm.expect(response.reservation_uid).to.be.eq(reservation_uid)",
 									"    pm.expect(response.hotel).to.be.not.undefined",
-									"    pm.expect(response.hotel.hotelUid).to.be.eq(hotelUid)",
+									"    pm.expect(response.hotel.hotel_uid).to.be.eq(hotel_uid)",
 									"    pm.expect(response.hotel.name).to.be.eq(\"Ararat Park Hyatt Moscow\")",
 									"    pm.expect(response.hotel.fullAddress).to.be.eq(\"Россия, Москва, Неглинная ул., 4\")",
 									"    pm.expect(response.hotel.stars).to.be.eq(5)",
-									"    pm.expect(response.startDate).to.be.eq(startDate)",
-									"    pm.expect(response.endDate).to.be.eq(endDate)",
+									"    pm.expect(response.start_date).to.be.eq(start_date)",
+									"    pm.expect(response.end_date).to.be.eq(end_date)",
 									"    pm.expect(response.status).to.be.eq(\"PAID\")",
 									"    pm.expect(response.payment).to.be.not.undefined",
 									"    pm.expect(response.payment.status).to.be.eq(\"PAID\")",
 									"    ",
-									"    const days = Math.abs(moment(startDate).diff(moment(endDate), \"days\"))",
+									"    const days = Math.abs(moment(start_date).diff(moment(end_date), \"days\"))",
 									"    const price = hotelPrice * days",
 									"    pm.expect(response.payment.price).to.be.eq(price - (price * discount / 100.0))",
 									"})"
@@ -368,7 +368,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/api/v1/reservations/:reservationUid",
+							"raw": "{{baseUrl}}/api/v1/reservations/:reservation_uid",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -376,12 +376,12 @@
 								"api",
 								"v1",
 								"reservations",
-								":reservationUid"
+								":reservation_uid"
 							],
 							"variable": [
 								{
-									"key": "reservationUid",
-									"value": "{{reservationUid}}",
+									"key": "reservation_uid",
+									"value": "{{reservation_uid}}",
 									"description": "UUID бронирования"
 								}
 							]
@@ -400,7 +400,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/api/v1/reservations/:reservationUid",
+									"raw": "{{baseUrl}}/api/v1/reservations/:reservation_uid",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -408,12 +408,12 @@
 										"api",
 										"v1",
 										"reservations",
-										":reservationUid"
+										":reservation_uid"
 									],
 									"variable": [
 										{
-											"key": "reservationUid",
-											"value": "{{reservationUid}}"
+											"key": "reservation_uid",
+											"value": "{{reservation_uid}}"
 										}
 									]
 								}
@@ -428,7 +428,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"reservationUid\": \"9b4ba1f7-e5ac-465b-ace4-7b54dec20f9a\",\n    \"hotel\": {\n        \"hotelUid\": \"049161bb-badd-4fa8-9d90-87c9a82b0668\",\n        \"name\": \"Ararat Park Hyatt Moscow\",\n        \"fullAddress\": \"Россия, Москва, Неглинная ул., 4\",\n        \"stars\": 5\n    },\n    \"startDate\": \"2021-10-08\",\n    \"endDate\": \"2021-10-11\",\n    \"status\": \"PAID\",\n    \"payment\": {\n        \"status\": \"PAID\",\n        \"price\": 27000\n    }\n}"
+							"body": "{\n    \"reservation_uid\": \"9b4ba1f7-e5ac-465b-ace4-7b54dec20f9a\",\n    \"hotel\": {\n        \"hotel_uid\": \"049161bb-badd-4fa8-9d90-87c9a82b0668\",\n        \"name\": \"Ararat Park Hyatt Moscow\",\n        \"fullAddress\": \"Россия, Москва, Неглинная ул., 4\",\n        \"stars\": 5\n    },\n    \"start_date\": \"2021-10-08\",\n    \"end_date\": \"2021-10-11\",\n    \"status\": \"PAID\",\n    \"payment\": {\n        \"status\": \"PAID\",\n        \"price\": 27000\n    }\n}"
 						}
 					]
 				},
@@ -445,29 +445,29 @@
 									"    pm.response.to.have.status(200)",
 									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
 									"",
-									"    const hotelUid = pm.collectionVariables.get(\"hotelUid\")",
-									"    const reservationUid = pm.collectionVariables.get(\"reservationUid\")",
+									"    const hotel_uid = pm.collectionVariables.get(\"hotel_uid\")",
+									"    const reservation_uid = pm.collectionVariables.get(\"reservation_uid\")",
 									"    const hotelPrice = pm.collectionVariables.get(\"hotelPrice\")",
-									"    const startDate = pm.collectionVariables.get(\"startDate\")",
-									"    const endDate = pm.collectionVariables.get(\"endDate\")",
+									"    const start_date = pm.collectionVariables.get(\"start_date\")",
+									"    const end_date = pm.collectionVariables.get(\"end_date\")",
 									"    const discount = pm.collectionVariables.get(\"discount\")",
 									"",
 									"    const response = pm.response.json();",
 									"    pm.expect(response).to.be.an(\"array\")",
-									"    const reservation = _.find(response, { \"reservationUid\": reservationUid })",
+									"    const reservation = _.find(response, { \"reservation_uid\": reservation_uid })",
 									"    ",
-									"    pm.expect(reservation.reservationUid).to.be.eq(reservationUid)",
+									"    pm.expect(reservation.reservation_uid).to.be.eq(reservation_uid)",
 									"    pm.expect(reservation.hotel).to.be.not.undefined",
-									"    pm.expect(reservation.hotel.hotelUid).to.be.eq(hotelUid)",
+									"    pm.expect(reservation.hotel.hotel_uid).to.be.eq(hotel_uid)",
 									"    pm.expect(reservation.hotel.name).to.be.eq(\"Ararat Park Hyatt Moscow\")",
 									"    pm.expect(reservation.hotel.fullAddress).to.be.eq(\"Россия, Москва, Неглинная ул., 4\")",
 									"    pm.expect(reservation.hotel.stars).to.be.eq(5)",
-									"    pm.expect(reservation.startDate).to.be.eq(startDate)",
-									"    pm.expect(reservation.endDate).to.be.eq(endDate)",
+									"    pm.expect(reservation.start_date).to.be.eq(start_date)",
+									"    pm.expect(reservation.end_date).to.be.eq(end_date)",
 									"    pm.expect(reservation.status).to.be.eq(\"PAID\")",
 									"    pm.expect(reservation.payment).to.be.not.undefined",
 									"    pm.expect(reservation.payment.status).to.be.eq(\"PAID\")",
-									"    const days = Math.abs(moment(startDate).diff(moment(endDate), \"days\"))",
+									"    const days = Math.abs(moment(start_date).diff(moment(end_date), \"days\"))",
 									"    const price = hotelPrice * days",
 									"    pm.expect(reservation.payment.price).to.be.eq(price - (price * discount / 100.0))",
 									"})"
@@ -531,7 +531,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "[\n    {\n        \"reservationUid\": \"9b4ba1f7-e5ac-465b-ace4-7b54dec20f9a\",\n        \"hotel\": {\n            \"hotelUid\": \"049161bb-badd-4fa8-9d90-87c9a82b0668\",\n            \"name\": \"Ararat Park Hyatt Moscow\",\n            \"fullAddress\": \"Россия, Москва, Неглинная ул., 4\",\n            \"stars\": 5\n        },\n        \"startDate\": \"2021-10-08\",\n        \"endDate\": \"2021-10-11\",\n        \"status\": \"PAID\",\n        \"payment\": {\n            \"status\": \"PAID\",\n            \"price\": 27000\n        }\n    }\n]"
+							"body": "[\n    {\n        \"reservation_uid\": \"9b4ba1f7-e5ac-465b-ace4-7b54dec20f9a\",\n        \"hotel\": {\n            \"hotel_uid\": \"049161bb-badd-4fa8-9d90-87c9a82b0668\",\n            \"name\": \"Ararat Park Hyatt Moscow\",\n            \"fullAddress\": \"Россия, Москва, Неглинная ул., 4\",\n            \"stars\": 5\n        },\n        \"start_date\": \"2021-10-08\",\n        \"end_date\": \"2021-10-11\",\n        \"status\": \"PAID\",\n        \"payment\": {\n            \"status\": \"PAID\",\n            \"price\": 27000\n        }\n    }\n]"
 						}
 					]
 				},
@@ -548,30 +548,30 @@
 									"    pm.response.to.have.status(200)",
 									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
 									"",
-									"    const hotelUid = pm.collectionVariables.get(\"hotelUid\")",
-									"    const reservationUid = pm.collectionVariables.get(\"reservationUid\")",
+									"    const hotel_uid = pm.collectionVariables.get(\"hotel_uid\")",
+									"    const reservation_uid = pm.collectionVariables.get(\"reservation_uid\")",
 									"    const hotelPrice = pm.collectionVariables.get(\"hotelPrice\")",
-									"    const startDate = pm.collectionVariables.get(\"startDate\")",
-									"    const endDate = pm.collectionVariables.get(\"endDate\")",
+									"    const start_date = pm.collectionVariables.get(\"start_date\")",
+									"    const end_date = pm.collectionVariables.get(\"end_date\")",
 									"    const discount = pm.collectionVariables.get(\"discount\")",
 									"",
 									"    const response = pm.response.json();",
 									"    pm.expect(response.reservations).to.be.not.undefined",
 									"    pm.expect(response.reservations).to.be.an(\"array\")",
-									"    const reservation = _.find(response.reservations, { \"reservationUid\": reservationUid })",
+									"    const reservation = _.find(response.reservations, { \"reservation_uid\": reservation_uid })",
 									"    ",
-									"    pm.expect(reservation.reservationUid).to.be.eq(reservationUid)",
+									"    pm.expect(reservation.reservation_uid).to.be.eq(reservation_uid)",
 									"    pm.expect(reservation.hotel).to.be.not.undefined",
-									"    pm.expect(reservation.hotel.hotelUid).to.be.eq(hotelUid)",
+									"    pm.expect(reservation.hotel.hotel_uid).to.be.eq(hotel_uid)",
 									"    pm.expect(reservation.hotel.name).to.be.eq(\"Ararat Park Hyatt Moscow\")",
 									"    pm.expect(reservation.hotel.fullAddress).to.be.eq(\"Россия, Москва, Неглинная ул., 4\")",
 									"    pm.expect(reservation.hotel.stars).to.be.eq(5)",
-									"    pm.expect(reservation.startDate).to.be.eq(startDate)",
-									"    pm.expect(reservation.endDate).to.be.eq(endDate)",
+									"    pm.expect(reservation.start_date).to.be.eq(start_date)",
+									"    pm.expect(reservation.end_date).to.be.eq(end_date)",
 									"    pm.expect(reservation.status).to.be.eq(\"PAID\")",
 									"    pm.expect(reservation.payment).to.be.not.undefined",
 									"    pm.expect(reservation.payment.status).to.be.eq(\"PAID\")",
-									"    const days = Math.abs(moment(startDate).diff(moment(endDate), \"days\"))",
+									"    const days = Math.abs(moment(start_date).diff(moment(end_date), \"days\"))",
 									"    const price = hotelPrice * days",
 									"    pm.expect(reservation.payment.price).to.be.eq(price - (price * discount / 100.0))",
 									"",
@@ -639,7 +639,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"reservations\": [\n        {\n            \"reservationUid\": \"9b4ba1f7-e5ac-465b-ace4-7b54dec20f9a\",\n            \"hotel\": {\n                \"hotelUid\": \"049161bb-badd-4fa8-9d90-87c9a82b0668\",\n                \"name\": \"Ararat Park Hyatt Moscow\",\n                \"fullAddress\": \"Россия, Москва, Неглинная ул., 4\",\n                \"stars\": 5\n            },\n            \"startDate\": \"2021-10-08\",\n            \"endDate\": \"2021-10-11\",\n            \"status\": \"PAID\",\n            \"payment\": {\n                \"status\": \"PAID\",\n                \"price\": 27000\n            }\n        }\n    ],\n    \"loyalty\": {\n        \"status\": \"GOLD\",\n        \"discount\": 10\n    }\n}"
+							"body": "{\n    \"reservations\": [\n        {\n            \"reservation_uid\": \"9b4ba1f7-e5ac-465b-ace4-7b54dec20f9a\",\n            \"hotel\": {\n                \"hotel_uid\": \"049161bb-badd-4fa8-9d90-87c9a82b0668\",\n                \"name\": \"Ararat Park Hyatt Moscow\",\n                \"fullAddress\": \"Россия, Москва, Неглинная ул., 4\",\n                \"stars\": 5\n            },\n            \"start_date\": \"2021-10-08\",\n            \"end_date\": \"2021-10-11\",\n            \"status\": \"PAID\",\n            \"payment\": {\n                \"status\": \"PAID\",\n                \"price\": 27000\n            }\n        }\n    ],\n    \"loyalty\": {\n        \"status\": \"GOLD\",\n        \"discount\": 10\n    }\n}"
 						}
 					]
 				},
@@ -654,12 +654,12 @@
 									"    pm.response.to.have.status(200)",
 									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
 									"",
-									"    const reservationCount = pm.collectionVariables.get(\"reservationCount\")",
+									"    const reservation_count = pm.collectionVariables.get(\"reservation_count\")",
 									"",
 									"    const response = pm.response.json();",
 									"    pm.expect(response.status).to.not.empty",
 									"    pm.expect(response.discount).to.be.not.undefined",
-									"    pm.expect(response.reservationCount).to.be.eq(reservationCount + 1)",
+									"    pm.expect(response.reservation_count).to.be.eq(reservation_count + 1)",
 									"})"
 								],
 								"type": "text/javascript"
@@ -721,7 +721,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status\": \"GOLD\",\n    \"discount\": 10,\n    \"reservationCount\": 25\n}"
+							"body": "{\n    \"status\": \"GOLD\",\n    \"discount\": 10,\n    \"reservation_count\": 25\n}"
 						}
 					]
 				},
@@ -750,7 +750,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/api/v1/reservations/:reservationUid",
+							"raw": "{{baseUrl}}/api/v1/reservations/:reservation_uid",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -758,12 +758,12 @@
 								"api",
 								"v1",
 								"reservations",
-								":reservationUid"
+								":reservation_uid"
 							],
 							"variable": [
 								{
-									"key": "reservationUid",
-									"value": "{{reservationUid}}",
+									"key": "reservation_uid",
+									"value": "{{reservation_uid}}",
 									"description": "UUID бронирования"
 								}
 							]
@@ -782,7 +782,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/api/v1/reservations/:reservationUid",
+									"raw": "{{baseUrl}}/api/v1/reservations/:reservation_uid",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -790,12 +790,12 @@
 										"api",
 										"v1",
 										"reservations",
-										":reservationUid"
+										":reservation_uid"
 									],
 									"variable": [
 										{
-											"key": "reservationUid",
-											"value": "{{reservationUid}}"
+											"key": "reservation_uid",
+											"value": "{{reservation_uid}}"
 										}
 									]
 								}
@@ -821,7 +821,7 @@
 					"script": {
 						"type": "text/javascript",
 						"exec": [
-							"pm.collectionVariables.set(\"hotelUid\", \"049161bb-badd-4fa8-9d90-87c9a82b0668\")",
+							"pm.collectionVariables.set(\"hotel_uid\", \"049161bb-badd-4fa8-9d90-87c9a82b0668\")",
 							"pm.collectionVariables.set(\"username\", \"Test Max\")"
 						]
 					}
@@ -844,7 +844,7 @@
 			"value": "http://localhost:8080"
 		},
 		{
-			"key": "hotelUid",
+			"key": "hotel_uid",
 			"value": ""
 		},
 		{
@@ -852,7 +852,7 @@
 			"value": ""
 		},
 		{
-			"key": "reservationCount",
+			"key": "reservation_count",
 			"value": ""
 		},
 		{
@@ -864,15 +864,15 @@
 			"value": ""
 		},
 		{
-			"key": "reservationUid",
+			"key": "reservation_uid",
 			"value": ""
 		},
 		{
-			"key": "startDate",
+			"key": "start_date",
 			"value": ""
 		},
 		{
-			"key": "endDate",
+			"key": "end_date",
 			"value": ""
 		}
 	]
