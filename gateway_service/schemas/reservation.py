@@ -1,13 +1,10 @@
-from pydantic import BaseModel, conint, constr
-from datetime import datetime as dt
+from pydantic import BaseModel, conint, constr, validator
+from datetime import datetime, date
 from uuid import UUID
 
 from enums.status import ReservationStatus
 from schemas.payment import PaymentInfo
 
-
-def convert_datetime(datetime: dt) -> str:
-    return datetime.strftime('%Y-%m-%d') 
 
 class HotelResponse(BaseModel):
     hotel_uid: UUID
@@ -31,32 +28,75 @@ class HotelInfo(BaseModel):
     stars: conint(ge=1) | None = None
 
 class ReservationResponse(BaseModel):
+    # class Config:
+    #     json_encoders = {dt: convert_datetime}
+
     reservation_uid: UUID
     hotel: HotelInfo
-    start_date: dt
-    end_date: dt
+    start_date: date
+    end_date: date
     status: ReservationStatus
     payment: PaymentInfo
 
-    class Config:
-        json_encoders = {dt: convert_datetime}
+    @validator("start_date", pre=True)
+    def parse_start_date(cls, value):
+        return datetime.strptime(
+            value,
+            "%Y-%m-%d"
+        ).date()
+
+    @validator("end_date", pre=True)
+    def parse_end_date(cls, value):
+        return datetime.strptime(
+            value,
+            "%Y-%m-%d"
+        ).date()
+
 
 class CreateReservationRequest(BaseModel):
-    hotel_uid: UUID
-    start_date: dt
-    end_date: dt
+    # class Config:
+    #     json_encoders = {dt: convert_datetime}
 
-    class Config:
-        json_encoders = {dt: convert_datetime}
+    hotel_uid: UUID
+    start_date: date
+    end_date: date
+
+    @validator("start_date", pre=True)
+    def parse_start_date(cls, value):
+        return datetime.strptime(
+            value,
+            "%Y-%m-%d"
+        ).date()
+
+    @validator("end_date", pre=True)
+    def parse_end_date(cls, value):
+        return datetime.strptime(
+            value,
+            "%Y-%m-%d"
+        ).date()
 
 class CreateReservationResponse(BaseModel):
+    # class Config:
+    #     json_encoders = {dt: convert_datetime}
+
     reservation_uid: UUID
     hotel_uid: UUID
-    start_date: dt
-    end_date: dt
+    start_date: date
+    end_date: date
     discount: int
     status: ReservationStatus
     payment: PaymentInfo
-    
-    class Config:
-        json_encoders = {dt: convert_datetime}
+
+    @validator("start_date", pre=True)
+    def parse_start_date(cls, value):
+        return datetime.strptime(
+            value,
+            "%Y-%m-%d"
+        ).date()
+
+    @validator("end_date", pre=True)
+    def parse_end_date(cls, value):
+        return datetime.strptime(
+            value,
+            "%Y-%m-%d"
+        ).date()

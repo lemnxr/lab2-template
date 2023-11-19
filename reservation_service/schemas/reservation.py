@@ -1,42 +1,83 @@
-from pydantic import BaseModel, constr, conint
+from pydantic import BaseModel, constr, conint, validator
 from uuid import UUID
-from datetime import datetime as dt
+from datetime import datetime, date
 
 from enums.status import ReservationStatus
 
-
-def convert_datetime(datetime: dt) -> str:
-    return datetime.strftime('%Y-%m-%d') 
 
 class ReservationBase(BaseModel):
     username: constr(max_length=80)
     hotel_id: int | None
     status: ReservationStatus
-    start_date: dt
-    end_date: dt
+    start_date: date
+    end_date: date
 
-    class Config:
-        json_encoders = {dt: convert_datetime}
+    @validator("start_date", pre=True)
+    def parse_start_date(cls, value):
+        return datetime.strptime(
+            value,
+            "%Y-%m-%d"
+        ).date()
+
+    @validator("end_date", pre=True)
+    def parse_end_date(cls, value):
+        return datetime.strptime(
+            value,
+            "%Y-%m-%d"
+        ).date()
 
 class ReservationRequest(ReservationBase):
     hotel_id: int | None = None
 
-    class Config:
-        json_encoders = {dt: convert_datetime}
+    @validator("start_date", pre=True)
+    def parse_start_date(cls, value):
+        return datetime.strptime(
+            value,
+            "%Y-%m-%d"
+        ).date()
+
+    @validator("end_date", pre=True)
+    def parse_end_date(cls, value):
+        return datetime.strptime(
+            value,
+            "%Y-%m-%d"
+        ).date()
 
 class Reservation(ReservationBase):
     id: int
     reservation_uid: UUID
     payment_uid: UUID
 
-    class Config:
-        json_encoders = {dt: convert_datetime}
+    @validator("start_date", pre=True)
+    def parse_start_date(cls, value):
+        return datetime.strptime(
+            value,
+            "%Y-%m-%d"
+        ).date()
+
+    @validator("end_date", pre=True)
+    def parse_end_date(cls, value):
+        return datetime.strptime(
+            value,
+            "%Y-%m-%d"
+        ).date()
 
 class ReservationUpdate(BaseModel):
     status: ReservationStatus | None = None
-    start_date: dt | None = None
-    end_date: dt | None = None
+    start_date: date | None = None
+    end_date: date | None = None
 
-    class Config:
-        json_encoders = {dt: convert_datetime}
+    @validator("start_date", pre=True)
+    def parse_start_date(cls, value):
+        return datetime.strptime(
+            value,
+            "%Y-%m-%d"
+        ).date()
+
+    @validator("end_date", pre=True)
+    def parse_end_date(cls, value):
+        return datetime.strptime(
+            value,
+            "%Y-%m-%d"
+        ).date()
     
