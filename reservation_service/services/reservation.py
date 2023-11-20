@@ -17,16 +17,12 @@ class ReservationService():
     
     async def get_reservations_by_username(self, user_name: str):
         reservation_list = await self._reservationCRUD.get_reservations_by_username(user_name)
-        print(reservation_list[0].start_date)
-        print(reservation_list[0].end_date)
 
         for i in reservation_list:
             string_start_date = str(i.start_date)[:10]
             string_end_date = str(i.end_date)[:10]
             i.start_date = datetime.strptime(string_start_date, '%Y-%m-%d').date()
             i.end_date = datetime.strptime(string_end_date, '%Y-%m-%d').date()
-            print(i.start_date)
-            print(i.end_date)
         return await self._reservationCRUD.get_reservations_by_username(user_name)
 
     async def get_by_uid(self, reservation_uid: UUID):

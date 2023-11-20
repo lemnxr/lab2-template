@@ -76,7 +76,8 @@ class GatewayService():
         for reservation_dict in reservations_list:
             hotel_dict = await self.__get_hotel_by_id(reservation_dict["hotel_id"])
             payment_dict = await self.__get_payment_by_uid(reservation_dict["payment_uid"])
-    
+            print(reservation_dict)
+            print(payment_dict)
             hotel_info = HotelInfo(
                 hotel_uid=hotel_dict["hotel_uid"],
                 name=hotel_dict["name"],
