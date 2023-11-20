@@ -64,20 +64,20 @@ jobs:
             echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker rmi gateway_service
             echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker-compose up -d
 
-  # autograding:
-  #   name: Autograding
-  #   needs: [deploy]
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #       with:
-  #         fetch-depth: 0
+  autograding:
+    name: Autograding
+    needs: [deploy]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
     
-  #     - name: Run API Tests
-  #       uses: matt-ball/newman-action@master
-  #       with:
-  #         collection: v2/postman/collection.json
-  #         environment: v2/postman/environment.json
-  #         delayRequest: 100
-  #         reporters: '[ "cli" ]'
+      - name: Run API Tests
+        uses: matt-ball/newman-action@master
+        with:
+          collection: v2/postman/collection.json
+          environment: v2/postman/environment.json
+          delayRequest: 100
+          reporters: '[ "cli" ]'
           
