@@ -44,7 +44,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          source: "reservation_service,payment_service,loyalty_service,gateway_service,docker,docker-compose.yml,requirements.txt"
+          source: "reservation_service,payment_service,loyalty_service,gateway_service,docker,docker-compose.yml,requirements.txt, Makefile"
           target: /home/${{ secrets.SSH_USERNAME }}/hotel-booking-system
 
       - name: Run app on VM
