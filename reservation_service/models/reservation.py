@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, CheckConstraint
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, CheckConstraint, Date
 from sqlalchemy.dialects.postgresql import UUID
 from uuid import uuid4
 
@@ -16,6 +16,6 @@ class ReservationModel(DB.Base):
     payment_uid = Column(UUID(as_uuid=True), default=uuid4, nullable=False)
     hotel_id = Column(Integer, ForeignKey(HotelModel.id))
     status = Column(String(20), nullable= False)
-    start_date = Column(DateTime(timezone=False))
-    end_date = Column(DateTime(timezone=False))
+    start_date = Column(Date)
+    end_date = Column(Date)
     

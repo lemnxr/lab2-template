@@ -71,8 +71,8 @@ CREATE TABLE public.reservation (
     payment_uid uuid NOT NULL,
     hotel_id integer,
     status character varying(20) NOT NULL,
-    start_date timestamp without time zone,
-    end_date timestamp without time zone
+    start_date date,
+    end_date date
 );
 
 
@@ -121,11 +121,9 @@ ALTER TABLE ONLY public.reservation ALTER COLUMN id SET DEFAULT nextval('public.
 COPY public.hotels (id, hotel_uid, name, country, city, address, stars, price) FROM stdin;
 \.
 
-
 INSERT INTO public.hotels (id, hotel_uid, name, country, city, address, stars, price)
 VALUES
     (1,'049161bb-badd-4fa8-9d90-87c9a82b0668','Ararat Park Hyatt Moscow','Россия','Москва','Неглинная ул., 4',5,10000);
-
 
 --
 -- Data for Name: reservation; Type: TABLE DATA; Schema: public; Owner: postgres
@@ -139,7 +137,7 @@ COPY public.reservation (id, reservation_uid, username, payment_uid, hotel_id, s
 -- Name: hotels_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.hotels_id_seq', 2, false);
+SELECT pg_catalog.setval('public.hotels_id_seq', 1, false);
 
 
 --
