@@ -29,6 +29,7 @@ class PaymentCRUD(IPaymentCRUD, BaseCRUD):
         response: Response = requests.get(
             url=f'{self.http_path}payments/{payment_uid}'
         )
+        print(response.json())
         return response.json()
         
     async def get_new_payment(
