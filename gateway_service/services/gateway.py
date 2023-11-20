@@ -74,9 +74,10 @@ class GatewayService():
         print("reservations_list:",reservations_list)
         reservations = []
 
-        for reservation_dict in reservations_list:
-            hotel_dict = await self.__get_hotel_by_id(reservation_dict["hotel_id"])
-            payment_dict = await self.__get_payment_by_uid(reservation_dict["payment_uid"])
+        for i in len(reservations_list):
+            print("i:", i)
+            hotel_dict = await self.__get_hotel_by_id(reservations_list[i]["hotel_id"])
+            payment_dict = await self.__get_payment_by_uid(reservations_list[i]["payment_uid"])
             #print(reservation_dict)
             #print(payment_dict)
             hotel_info = HotelInfo(
