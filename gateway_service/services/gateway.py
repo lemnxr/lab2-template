@@ -96,11 +96,11 @@ class GatewayService():
 
             reservations.append(
                 ReservationResponse(
-                    reservation_uid=reservation_dict["reservation_uid"],
+                    reservation_uid=reservations_list[i]["reservation_uid"],
                     hotel=hotel_info,
-                    start_date=reservation_dict["start_date"],
-                    end_date=reservation_dict["end_date"],
-                    status=reservation_dict["status"],
+                    start_date=reservations_list[i]["start_date"],
+                    end_date=reservations_list[i]["end_date"],
+                    status=reservations_list[i]["status"],
                     payment=payment_info
                 )
             )
