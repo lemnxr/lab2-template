@@ -16,7 +16,7 @@ class PaymentService():
 
     async def get_by_uid(self, payment_uid: UUID):
         payment = await self._paymentCRUD.get_by_uid(payment_uid)
-        print(payment.payment_uid)
+        print(type(payment))
         print(payment)
         if payment == None:
             print("tttttt")
