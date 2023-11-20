@@ -26,9 +26,9 @@ class PaymentCRUD(IPaymentCRUD, BaseCRUD):
             self,
             payment_uid: UUID
     ):
-        response_list: Response = requests.get(url=f'{self.http_path}payments/')
-        print("payments_list:",response_list.json())
-        print("get_payment_uid:", payment_uid)
+        #response_list: Response = requests.get(url=f'{self.http_path}payments/')
+        #print("payments_list:",response_list.json())
+        #print("get_payment_uid:", payment_uid)
         response: Response = requests.get(
             url=f'{self.http_path}payments/{payment_uid}'
         )
@@ -41,8 +41,6 @@ class PaymentCRUD(IPaymentCRUD, BaseCRUD):
     ):
         payment_data = {"payment_uid": payment_uid, "status": PaymentStatus.Paid.value, "price": full_price}
         payment_data_json = json.dumps(payment_data)
-        print("insert_payment_data:",payment_data_json)
-        print("ttt")
         requests.post(url=f'{self.http_path}payments/', data=payment_data_json)
 
         return payment_data

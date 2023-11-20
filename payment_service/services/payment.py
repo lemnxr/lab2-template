@@ -16,24 +16,15 @@ class PaymentService():
 
     async def get_by_uid(self, payment_uid: UUID):
         payment = await self._paymentCRUD.get_by_uid(payment_uid)
-        print("3")
-        print(type(payment))
-        print(payment)
+
         if payment == None:
-            print("tttttt")
             raise NotFoundException(prefix="Get Payment")
         return payment
     
     async def add(self, payment_request: PaymentRequest):
-        print("1")
-        #print("payment:", payment)
-        #print("payment_uid:",payment.payment_uid)
         payment = PaymentModel(**payment_request.model_dump())
         payment = await self._paymentCRUD.add(payment)
-        print("2")
-        print(type(payment))
-        print("payment:", payment)
-        print("payment_uid:",payment.payment_uid)
+
         if payment == None:
             raise ConflictException(prefix="Add Payment")
         return payment

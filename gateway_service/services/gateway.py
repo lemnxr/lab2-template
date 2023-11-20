@@ -70,14 +70,14 @@ class GatewayService():
     
     async def _get_user_reservations_hotels(self, user_name: str):
         reservations_list = await self._reservationCRUD.get_reservations_by_username(user_name=user_name)
-        print("username:",user_name)
-        print("reservations_list:",reservations_list)
+        #print("username:",user_name)
+        #print("reservations_list:",reservations_list)
         reservations = []
 
         for i in range(len(reservations_list)):
-            print("i:", i)
-            print(reservations_list[i]["payment_uid"])
-            print(reservations_list[i])
+            #print("i:", i)
+            #print(reservations_list[i]["payment_uid"])
+            #print(reservations_list[i])
             hotel_dict = await self.__get_hotel_by_id(reservations_list[i]["hotel_id"])
             payment_dict = await self.__get_payment_by_uid(reservations_list[i]["payment_uid"])
             #print(reservation_dict)
