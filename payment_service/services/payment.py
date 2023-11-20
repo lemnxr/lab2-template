@@ -25,8 +25,8 @@ class PaymentService():
     
     async def add(self, payment_request: PaymentRequest):
         print("1")
-        print("payment:", payment)
-        print("payment_uid:",payment.payment_uid)
+        #print("payment:", payment)
+        #print("payment_uid:",payment.payment_uid)
         payment = PaymentModel(**payment_request.model_dump())
         payment = await self._paymentCRUD.add(payment)
         print("2")
