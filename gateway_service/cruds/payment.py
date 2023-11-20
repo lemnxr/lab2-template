@@ -26,6 +26,7 @@ class PaymentCRUD(IPaymentCRUD, BaseCRUD):
             self,
             payment_uid: UUID
     ):
+        print("get_payment_uid:", payment_uid)
         response: Response = requests.get(
             url=f'{self.http_path}payments/{payment_uid}'
         )
