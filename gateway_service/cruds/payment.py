@@ -39,7 +39,7 @@ class PaymentCRUD(IPaymentCRUD, BaseCRUD):
     ):
         payment_data = {"payment_uid": payment_uid, "status": PaymentStatus.Paid.value, "price": full_price}
         payment_data_json = json.dumps(payment_data)
-        print(payment_data_json)
+        print("insert_payment_data:",payment_data_json)
         print("ttt")
         requests.post(url=f'{self.http_path}payments/', data=payment_data_json)
 
