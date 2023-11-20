@@ -10,6 +10,7 @@ class PaymentCRUD(IPaymentCRUD):
         return self._db.query(PaymentModel).offset(offset).limit(limit).all()
 
     async def get_by_uid(self, payment_uid: UUID):
+        print("uid:", payment_uid)
         return self._db.query(PaymentModel).filter(PaymentModel.payment_uid == payment_uid).first()
 
     async def add(self, payment: PaymentModel):
